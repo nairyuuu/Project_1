@@ -30,7 +30,7 @@ public class FileSender {
             byte[] fileNameBytes = fileName.getBytes();
 
             byte[] fileContentBytes = new byte[(int) fileToSend.length()];
-            fileInputStream.read(fileContentBytes);
+            //fileInputStream.read(fileContentBytes);
 
             dataOutputStream.writeInt(fileNameBytes.length);
             dataOutputStream.write(fileNameBytes);
