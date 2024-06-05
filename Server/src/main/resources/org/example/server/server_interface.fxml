@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+
+<?import javafx.geometry.Insets?>
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.example.server.ServerController">
+
+    <top>
+        <Label text="File Receiver" style="-fx-font-size: 25px; -fx-font-weight: bold; -fx-padding: 20 0 10 0;"/>
+    </top>
+
+    <center>
+        <ScrollPane fitToWidth="true">
+            <VBox fx:id="fileBox" spacing="10"/>
+        </ScrollPane>
+    </center>
+
+    <padding>
+        <Insets top="20" right="10" bottom="10" left="10"/>
+    </padding>
+
+</BorderPane>
