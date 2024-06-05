@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.collections.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<TabPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.filesender.ClientController" prefWidth="450" prefHeight="450">
+    <tabs>
+        <Tab text="Manage" closable="false">
+            <VBox alignment="CENTER" spacing="20" prefWidth="450" prefHeight="450">
+                <Label text="Uploaded Files" style="-fx-font-size: 25px;"/>
+                <ListView fx:id="lvFiles" prefWidth="400" prefHeight="300">
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <!-- Example items, to be replaced dynamically -->
+                            <String fx:value="File1.txt"/>
+                            <String fx:value="File2.jpg"/>
+                        </FXCollections>
+                    </items>
+                </ListView>
+            </VBox>
+        </Tab>
+        <Tab text="Upload" closable="false">
+            <VBox alignment="CENTER" spacing="20" prefWidth="450" prefHeight="450">
+                <Label fx:id="jlFileName" text="Choose a file to send" style="-fx-font-size: 25px;"/>
+                <HBox alignment="CENTER" spacing="20">
+                    <Button fx:id="ButtonUploadFile" text="Send File" prefWidth="150" prefHeight="75" style="-fx-font-size: 20px;"/>
+                    <Button fx:id="ButtonChooseFile" text="Choose File" prefWidth="150" prefHeight="75" style="-fx-font-size: 20px;"/>
+                </HBox>
+            </VBox>
+        </Tab>
+    </tabs>
+</TabPane>
