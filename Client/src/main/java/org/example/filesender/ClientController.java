@@ -48,7 +48,6 @@ public class ClientController {
         lvFiles.setCellFactory(new FileCellFactory());
         ButtonChooseFile.setOnAction(e -> handleChooseFile());
         ButtonUploadFile.setOnAction(e -> handleFileUpload());
-//        startFileListingUpdater();
         new Thread(() -> {
             synchronized (lock) {
                 while (userId == null) {
@@ -56,6 +55,8 @@ public class ClientController {
                         lock.wait();
                     } catch (InterruptedException e) {
                         Logger.getLogger(e.getMessage());
+                        Thread.currentThread().interrupt();
+                        return;
                     }
                 }
                 Platform.runLater(this::handleFileListing); // Load files from server after userId is set
