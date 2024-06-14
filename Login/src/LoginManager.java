@@ -1,4 +1,5 @@
 import java.sql.SQLException;
+import java.util.logging.Logger;
 
 public class LoginManager {
 
@@ -19,7 +20,7 @@ public class LoginManager {
                 return false;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            Logger.getLogger(e.getMessage());
             return false;
         }
     }
@@ -30,7 +31,7 @@ public class LoginManager {
             userDAO.addUser(user);
             System.out.println("User registered successfully!");
         } catch (SQLException e) {
-            e.printStackTrace();
+            Logger.getLogger(e.getMessage());
         }
     }
 }
