@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="309.0" prefWidth="600.0" style="-fx-background-color: #fff;" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.filesender.RegisterController">
+    <VBox alignment="CENTER" layoutX="200.0" layoutY="100.0" spacing="10.0">
+        <Label style="-fx-font-size: 24px;" text="Register" />
+        <TextField fx:id="usernameField" layoutX="7.0" prefHeight="34.0" prefWidth="275.0" promptText="username or email" />
+        <PasswordField fx:id="passwordField" layoutX="7.0" layoutY="61.0" prefHeight="34.0" prefWidth="275.0" promptText="password" stylesheets="@styling/fullpackstyling.css" />
+        <PasswordField fx:id="confirmPasswordField" promptText="Confirm Password" />
+        <Button onAction="#handleRegister" stylesheets="@styling/fullpackstyling.css" text="Register" />
+        <Label fx:id="errorLabel" textFill="red" />
+    </VBox>
+</AnchorPane>
