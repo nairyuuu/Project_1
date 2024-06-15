@@ -112,7 +112,7 @@ class ClientHandler implements Runnable {
             if (userId.isEmpty()) {
                 return;
             }
-            File userFolder = new File(FileServer.UPLOAD_DIR, userId);
+            File userFolder = new File(Config.UPLOAD_DIR, userId);
             if (!userFolder.exists()) {
                 boolean mkdir = userFolder.mkdirs();
                 if (!mkdir) {
@@ -137,7 +137,7 @@ class ClientHandler implements Runnable {
     private void handleFileDelete(DataInputStream dataInput, DataOutputStream dataOutput) throws IOException {
         String userId = dataInput.readUTF();
         String fileName = dataInput.readUTF();
-        File file = new File(FileServer.UPLOAD_DIR + "/" + userId, fileName);
+        File file = new File(Config.UPLOAD_DIR + "/" + userId, fileName);
 
         if (file.exists()) {
             if (file.delete()) {
@@ -152,7 +152,7 @@ class ClientHandler implements Runnable {
     private void handleFileDownload(DataInputStream dataInput, DataOutputStream dataOutput) throws IOException {
         String userId = dataInput.readUTF();
         String fileName = dataInput.readUTF();
-        File file = new File(FileServer.UPLOAD_DIR + "/" + userId, fileName);
+        File file = new File(Config.UPLOAD_DIR + "/" + userId, fileName);
 
         if (file.exists()) {
             dataOutput.writeUTF("FOUND");
