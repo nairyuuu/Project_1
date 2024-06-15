@@ -16,9 +16,6 @@ import java.net.Socket;
 import java.util.logging.Logger;
 
 public class LoginController {
-    private static final String SERVER_ADDRESS = "localhost";
-    private static final int SERVER_PORT = 12345;
-
     @FXML
     private TextField usernameField;
 
@@ -70,7 +67,7 @@ public class LoginController {
     }
     private String authenticate(String username, String password) {
         String userId = null;
-        try (Socket socket = new Socket(SERVER_ADDRESS, SERVER_PORT);
+        try (Socket socket = new Socket(Config.SERVER_ADDRESS, Config.SERVER_PORT);
              DataOutputStream dataOutput = new DataOutputStream(socket.getOutputStream());
              DataInputStream dataInput = new DataInputStream(socket.getInputStream())) {
 
