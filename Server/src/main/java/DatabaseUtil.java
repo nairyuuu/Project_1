@@ -5,12 +5,8 @@ import java.util.UUID;
 import java.util.logging.Logger;
 
 public class DatabaseUtil {
-    private static final String URL = "jdbc:mysql://localhost:3306/FileSenderDB";
-    private static final String USER = "root";
-    private static final String PASSWORD = System.getenv("DB_PASSWORD");
-
     public static Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(URL, USER, PASSWORD);
+        return DriverManager.getConnection(Config.DB_URL, Config.DB_USER, Config.DB_PASSWORD);
     }
 
     public static boolean userExists(String username) throws SQLException {
