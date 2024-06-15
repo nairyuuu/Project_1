@@ -13,8 +13,6 @@ import java.net.Socket;
 import java.util.logging.Logger;
 
 public class ClientController {
-    private static final String SERVER_ADDRESS = "localhost";
-    private static final int SERVER_PORT = 12345;
     private File fileToSend;
     private String userId;
     private final Object lock = new Object();
@@ -45,7 +43,7 @@ public class ClientController {
     @FXML
     private void initialize() {
 
-        lvFiles.setCellFactory(new FileCellFactory());
+        lvFiles.setCellFactory(new FileListing());
         ButtonChooseFile.setOnAction(e -> handleChooseFile());
         ButtonUploadFile.setOnAction(e -> handleFileUpload());
         new Thread(() -> {
@@ -77,7 +75,7 @@ public class ClientController {
         }
     }
     private void uploadFileToServer(File file) {
-        try (Socket socket = new Socket(SERVER_ADDRESS, SERVER_PORT);
+        try (Socket socket = new Socket(Config.SERVER_ADDRESS, Config.SERVER_PORT);
              DataOutputStream dataOutput = new DataOutputStream(socket.getOutputStream());
              FileInputStream fileInput = new FileInputStream(file)) {
 
@@ -114,7 +112,7 @@ public class ClientController {
         }
     }
     private void handleFileListing() {
-        try (Socket socket = new Socket(SERVER_ADDRESS, SERVER_PORT);
+        try (Socket socket = new Socket(Config.SERVER_ADDRESS, Config.SERVER_PORT);
              DataOutputStream dataOutput = new DataOutputStream(socket.getOutputStream());
              DataInputStream dataInput = new DataInputStream(socket.getInputStream())) {
 
@@ -132,7 +130,7 @@ public class ClientController {
         }
     }
     void handleDownloadFile(String fileName) {
-        try (Socket socket = new Socket(SERVER_ADDRESS, SERVER_PORT);
+        try (Socket socket = new Socket(Config.SERVER_ADDRESS, Config.SERVER_PORT);
              DataOutputStream dataOutput = new DataOutputStream(socket.getOutputStream());
              DataInputStream dataInput = new DataInputStream(socket.getInputStream())) {
 
@@ -164,7 +162,7 @@ public class ClientController {
         }
     }
     void handleDeleteFile(String fileName) {
-        try (Socket socket = new Socket(SERVER_ADDRESS, SERVER_PORT);
+        try (Socket socket = new Socket(Config.SERVER_ADDRESS, Config.SERVER_PORT);
              DataOutputStream dataOutput = new DataOutputStream(socket.getOutputStream());
              DataInputStream dataInput = new DataInputStream(socket.getInputStream())) {
 
