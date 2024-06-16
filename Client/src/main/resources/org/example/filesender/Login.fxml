@@ -6,22 +6,24 @@
 <?import javafx.scene.text.*?>
 
 <AnchorPane id="AnchorPane" prefHeight="503.0" prefWidth="854.0" style="-fx-background-color: #fff;" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.filesender.LoginController">
-    <AnchorPane prefHeight="503.0" prefWidth="382.0" style="-fx-background-color: #000000;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
-        <ImageView fitHeight="52.0" fitWidth="52.0" layoutX="166.0" layoutY="179.0" pickOnBounds="true" preserveRatio="true">
-            <Image url="@images/logo.png" />
-        </ImageView>
-        <Label alignment="CENTER" layoutX="105.0" layoutY="262.0" prefHeight="23.0" prefWidth="173.0" text="TCP File transfer" textFill="WHITE">
-            <font>
-                <Font name="Segoe UI" size="18.0" />
-            </font>
-        </Label>
-        <Label alignment="CENTER" layoutX="89.0" layoutY="295.0" prefHeight="23.0" prefWidth="205.0" text="Simple one" textFill="WHITE">
-            <font>
-                <Font name="Segoe UI" size="12.0" />
-            </font>
-        </Label>
-    </AnchorPane>
-    <AnchorPane layoutX="488.0" layoutY="121.0" prefHeight="214.0" prefWidth="283.0" AnchorPane.bottomAnchor="168.0" AnchorPane.topAnchor="121.0">
+    <HBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" AnchorPane.rightAnchor="472.0" style="-fx-background-color: #000000;" alignment="CENTER">
+        <VBox alignment="CENTER" spacing="10.0">
+            <ImageView fitHeight="52.0" fitWidth="52.0" pickOnBounds="true" preserveRatio="true">
+                <Image url="@images/logo.png" />
+            </ImageView>
+            <Label text="TCP File transfer" textFill="WHITE" alignment="CENTER">
+                <font>
+                    <Font name="Segoe UI" size="18.0" />
+                </font>
+            </Label>
+            <Label text="Simple one" textFill="WHITE" alignment="CENTER">
+                <font>
+                    <Font name="Segoe UI" size="12.0" />
+                </font>
+            </Label>
+        </VBox>
+    </HBox>
+    <AnchorPane layoutX="488.0" layoutY="121.0" prefHeight="214.0" prefWidth="283.0" AnchorPane.rightAnchor="83.0" AnchorPane.bottomAnchor="168.0" AnchorPane.topAnchor="121.0">
         <TextField fx:id="usernameField" layoutX="7.0" prefHeight="34.0" prefWidth="275.0" promptText="username or email" />
         <PasswordField fx:id="passwordField" layoutX="7.0" layoutY="61.0" prefHeight="34.0" prefWidth="275.0" promptText="password" stylesheets="@styling/fullpackstyling.css" />
         <Button layoutX="152.0" layoutY="122.0" mnemonicParsing="false" onAction="#handleLogin" prefHeight="34.0" prefWidth="127.0" stylesheets="@styling/fullpackstyling.css" text="Sign in" />
