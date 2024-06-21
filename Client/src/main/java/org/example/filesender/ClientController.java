@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextInputDialog;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -30,7 +31,6 @@ public class ClientController {
             lock.notifyAll(); // Notify the waiting thread that userId is set
         }
     }
-
     @FXML
     private ListView<String> lvFiles;
     @FXML
@@ -57,9 +57,10 @@ public class ClientController {
                         return;
                     }
                 }
-                Platform.runLater(this::handleFileListing); // Load files from server after userId is set
+                Platform.runLater(this::handleFileListing);// Load files from server after userId is set
             }
         }).start();
+
 
     }
     @FXML
@@ -177,6 +178,58 @@ public class ClientController {
         } catch (IOException e) {
             Logger.getLogger(e.getMessage());
         }
+    }
+
+    public void handleEncryptFile(String fileName) {
+        try (Socket socket = new Socket(Config.SERVER_ADDRESS, Config.SERVER_PORT);
+             DataOutputStream dataOutput = new DataOutputStream(socket.getOutputStream());
+             DataInputStream dataInput = new DataInputStream(socket.getInputStream())) {
+
+            String userPrivateKey = getUserPrivateKey();
+            if (userPrivateKey == null) return;
+
+            dataOutput.writeUTF("ENCRYPT");
+            dataOutput.writeUTF(userId);
+            dataOutput.writeUTF(fileName);
+            dataOutput.writeUTF(userPrivateKey);
+
+            String response = dataInput.readUTF();
+            LabelFileName.setText(response);
+            handleFileListing();
+
+        } catch (IOException e) {
+            Logger.getLogger(e.getMessage());
+        }
+    }
+
+    public void handleDecryptFile(String fileName) {
+        try (Socket socket = new Socket(Config.SERVER_ADDRESS, Config.SERVER_PORT);
+             DataOutputStream dataOutput = new DataOutputStream(socket.getOutputStream());
+             DataInputStream dataInput = new DataInputStream(socket.getInputStream())) {
+
+            String password = getUserPrivateKey();
+            if (password == null) return;
+
+            dataOutput.writeUTF("DECRYPT");
+            dataOutput.writeUTF(userId);
+            dataOutput.writeUTF(fileName);
+            dataOutput.writeUTF(password);
+
+            String response = dataInput.readUTF();
+            LabelFileName.setText(response);
+            handleFileListing();
+
+        } catch (IOException e) {
+            Logger.getLogger(e.getMessage());
+        }
+    }
+    private String getUserPrivateKey() {
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Private key Input");
+        dialog.setHeaderText("Enter your encryption/decryption private key \nMake sure to remember them or else you can't decrypt your file");
+        dialog.setContentText("Key:");
+
+        return dialog.showAndWait().orElse(null);
     }
 }
 

@@ -41,8 +41,12 @@ public class FileListing implements Callback<ListView<String>, ListCell<String>>
                     downloadItem.setOnAction(event -> ((ClientController) getListView().getScene().getUserData()).handleDownloadFile(fileName));
                     MenuItem deleteItem = new MenuItem("Delete");
                     deleteItem.setOnAction(event -> ((ClientController) getListView().getScene().getUserData()).handleDeleteFile(fileName));
-                    contextMenu.getItems().addAll(downloadItem, deleteItem);
+                    MenuItem encryptItem = new MenuItem("Encrypt");
+                    encryptItem.setOnAction(event -> ((ClientController) getListView().getScene().getUserData()).handleEncryptFile(fileName));
+                    MenuItem decryptItem = new MenuItem("Decrypt");
+                    decryptItem.setOnAction(event -> ((ClientController) getListView().getScene().getUserData()).handleDecryptFile(fileName));
 
+                    contextMenu.getItems().addAll(downloadItem, deleteItem, encryptItem, decryptItem);
                     optionsButton.setOnMouseClicked(event ->
                             contextMenu.show(optionsButton, event.getScreenX(), event.getScreenY())
                     );

@@ -60,8 +60,6 @@ public class LoginController {
             Stage stage = new Stage();
             stage.setTitle("Register");
             stage.setScene(new Scene(root));
-            stage.setMinWidth(600);
-            stage.setMinHeight(400);
             stage.show();
         } catch (IOException e) {
             Logger.getLogger(e.getMessage());

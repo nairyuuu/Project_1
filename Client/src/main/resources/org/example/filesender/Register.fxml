@@ -9,7 +9,7 @@
         <TextField fx:id="usernameField" prefHeight="40.0" prefWidth="300.0" minWidth="30.0" maxWidth="500.0" promptText="username or email" />
         <PasswordField fx:id="passwordField" prefHeight="40.0" prefWidth="300.0" minWidth="30.0" maxWidth="500.0" promptText="password" />
         <PasswordField fx:id="confirmPasswordField" prefHeight="40.0" prefWidth="300.0" minWidth="30.0" maxWidth="500.0" promptText="Confirm Password" />
-        <Button onAction="#handleRegister" stylesheets="@styling/fullpackstyling.css" text="Register" />
+        <Button onAction="#handleRegister" stylesheets="@styling/fullPackStyling.css" text="Register" />
         <Label fx:id="errorLabel" textFill="red" />
     </VBox>
 </AnchorPane>
