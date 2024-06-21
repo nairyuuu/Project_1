@@ -11,7 +11,7 @@ public class DatabaseUtil {
 
     public static boolean userExists(String username) throws SQLException {
         try (Connection conn = getConnection();
-             PreparedStatement stmt = conn.prepareStatement("SELECT 1 FROM users WHERE username = ?")) {
+             PreparedStatement stmt = conn.prepareStatement("SELECT 1 FROM users WHERE BINARY username = ?")) {
             stmt.setString(1, username);
             try (ResultSet rs = stmt.executeQuery()) {
                 return rs.next();
@@ -43,7 +43,7 @@ public class DatabaseUtil {
     private static String getHashedPassword(String username) {
         String hashedPassword = null;
         try (Connection connection = getConnection();
-             PreparedStatement statement = connection.prepareStatement("SELECT password FROM users WHERE username = ?")) {
+             PreparedStatement statement = connection.prepareStatement("SELECT password FROM users WHERE BINARY username = ?")) {
             statement.setString(1, username);
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
@@ -59,7 +59,7 @@ public class DatabaseUtil {
     private static String getUserId(String username) {
         String userId = null;
         try (Connection connection = getConnection();
-             PreparedStatement statement = connection.prepareStatement("SELECT user_id FROM users WHERE username = ?")) {
+             PreparedStatement statement = connection.prepareStatement("SELECT user_id FROM users WHERE BINARY username = ?")) {
             statement.setString(1, username);
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
