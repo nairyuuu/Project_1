@@ -2,6 +2,7 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+
 import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
@@ -202,9 +203,45 @@ class ClientHandler implements Runnable {
 
         // Generate a key from the password
         SecretKey secretKey = getKey(privateKey);
-
         // Encrypt the file
         File encryptedFile = new File("uploads/" + userId + "/" + fileName + ".enc");
+        String response = encryptFile(file, encryptedFile, secretKey);
+
+        if (response.equals("File encrypted successfully") && file.delete()) {
+            dataOutput.writeUTF(response);
+        } else if (response.equals("File encrypted successfully")) {
+            dataOutput.writeUTF(response + ", but failed to delete original file");
+        } else {
+            dataOutput.writeUTF(response);
+        }
+    }
+
+    private void handleFileDecrypt(DataInputStream dataInput, DataOutputStream dataOutput) throws Exception {
+        String userId = dataInput.readUTF();
+        String encryptedFileName = dataInput.readUTF();
+        String privateKey = dataInput.readUTF();
+
+        File encryptedFile = new File("uploads/" + userId + "/" + encryptedFileName);
+        if (!encryptedFile.exists()) {
+            dataOutput.writeUTF("File not found");
+            return;
+        }
+
+        SecretKey secretKey = getKey(privateKey);
+
+        // Decrypt the file
+        File decryptedFile = new File("uploads/" + userId + "/" + encryptedFileName.substring(0, encryptedFileName.length() - 4));
+        String response = decryptFile(encryptedFile, decryptedFile, secretKey);
+
+        if (response.equals("File decrypted successfully") && encryptedFile.delete()) {
+            dataOutput.writeUTF(response);
+        } else if (response.equals("File decrypted successfully")) {
+            dataOutput.writeUTF(response + ", but failed to delete encrypted file");
+        } else {
+            dataOutput.writeUTF(response);
+        }
+    }
+    private String encryptFile(File file, File encryptedFile, SecretKey secretKey) {
         try (FileInputStream fis = new FileInputStream(file);
              FileOutputStream fos = new FileOutputStream(encryptedFile)) {
 
@@ -228,32 +265,13 @@ class ClientHandler implements Runnable {
 
         } catch (Exception e) {
             Logger.getLogger("Error encrypting file: " + e.getMessage());
+            return "Error encrypting file";
         }
-        if (file.delete()) {
-            dataOutput.writeUTF("File encrypted successfully");
-        } else {
-            dataOutput.writeUTF("File encrypted successfully, but failed to delete original file");
-        }
+        return "File encrypted successfully";
     }
-
-    private void handleFileDecrypt(DataInputStream dataInput, DataOutputStream dataOutput) throws Exception {
-        String userId = dataInput.readUTF();
-        String encryptedFileName = dataInput.readUTF();
-        String privateKey = dataInput.readUTF();
-
-        File encryptedFile = new File("uploads/" + userId + "/" + encryptedFileName);
-        if (!encryptedFile.exists()) {
-            dataOutput.writeUTF("File not found");
-            return;
-        }
-
-        // Generate a key from the password
-        SecretKey secretKey = getKey(privateKey);
-
-        // Decrypt the file
-        File decryptedFile = new File("uploads/" + userId + "/" + encryptedFileName.substring(0, encryptedFileName.length() - 4));
-        boolean decryptionSuccessful = false;
+    private String decryptFile(File encryptedFile, File decryptedFile, SecretKey secretKey) {
         boolean deleteDecryptedFile = false;
+
         try (FileInputStream fis = new FileInputStream(encryptedFile);
              FileOutputStream fos = new FileOutputStream(decryptedFile)) {
 
@@ -264,31 +282,26 @@ class ClientHandler implements Runnable {
             int bytesRead;
 
             while ((bytesRead = fis.read(inputBuffer)) != -1) {
-                byte[] outputBuffer;
-                outputBuffer = cipher.update(inputBuffer, 0, bytesRead);
+                byte[] outputBuffer = cipher.update(inputBuffer, 0, bytesRead);
                 if (outputBuffer != null) {
                     fos.write(outputBuffer);
                 }
             }
-            byte[] outputBuffer;
-            try {
-                outputBuffer = cipher.doFinal();
-            } catch (BadPaddingException e) {
-                // Handle BadPaddingException
-                dataOutput.writeUTF("Error: Incorrect decryption password");
-                deleteDecryptedFile = true; // Set flag to delete decrypted file
-                return;
-            }
+
+            byte[] outputBuffer = cipher.doFinal();
             if (outputBuffer != null) {
                 fos.write(outputBuffer);
             }
 
-            decryptionSuccessful = true;
+            return "File decrypted successfully";
+
+        } catch (BadPaddingException e) {
+            deleteDecryptedFile = true; // Set flag to delete decrypted file
+            return "Error: Incorrect decryption password";
         } catch (Exception e) {
-            Logger.getLogger("Error decrypting file: " + e.getMessage());
-            dataOutput.writeUTF("Error decrypting file: " + e.getMessage());
+            Logger.getLogger(e.getMessage());
+            return "Error decrypting file";
         } finally {
-            // Always try to delete the decrypted file if flag is set
             if (deleteDecryptedFile && decryptedFile.exists()) {
                 if (decryptedFile.delete()) {
                     Logger.getLogger("Decrypted file deleted successfully");
@@ -296,21 +309,10 @@ class ClientHandler implements Runnable {
                     Logger.getLogger("Failed to delete decrypted file");
                 }
             }
-
-            // If decryption was successful, delete encrypted file
-            if (decryptionSuccessful && encryptedFile.exists()) {
-                if (!encryptedFile.delete()) {
-                    Logger.getLogger("Failed to delete encrypted file");
-                }
-            }
-        }
-
-        // Respond based on decryption success
-        if (decryptionSuccessful) {
-            dataOutput.writeUTF("File decrypted successfully");
         }
     }
 }
+
 
 
 
