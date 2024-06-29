@@ -187,7 +187,7 @@ class ClientHandler implements Runnable {
     }
     private SecretKey getKey(String privateKey) throws Exception {
         byte[] key = (privateKey).getBytes(StandardCharsets.UTF_8);
-        MessageDigest sha = MessageDigest.getInstance("SHA-1");
+        MessageDigest sha = MessageDigest.getInstance("SHA-512");
         key = sha.digest(key);
         key = Arrays.copyOf(key, 16);
         return new SecretKeySpec(key, "AES");
