@@ -7,7 +7,7 @@ import java.util.UUID;
 import java.util.logging.Logger;
 
 public class DatabaseUtil {
-    public static Connection getConnection() throws SQLException {
+    private static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(Config.DB_URL, Config.DB_USER, Config.DB_PASSWORD);
     }
 
