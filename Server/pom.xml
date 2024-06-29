@@ -9,9 +9,26 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
+        <sonar.login>admin</sonar.login>
+        <sonar.password>311203</sonar.password>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+
+        <jacoco.version>0.8.12</jacoco.version>
+        <cucumber.version>7.18.0</cucumber.version>
+        <junit-jupiter.version>5.10.3</junit-jupiter.version>
+
+        <itCoverageAgent></itCoverageAgent>
+        <sonar.language>java</sonar.language>
+        <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
+        <sonar.exclusions>**/pom.xml</sonar.exclusions>
+        <sonar.scm.provider>git</sonar.scm.provider>
+        <sonar.log.level>TRACE</sonar.log.level>
+        <sonar.verbose>true</sonar.verbose>
+        <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+        
     </properties>
     <build>
         <plugins>
@@ -84,16 +101,23 @@
                 <version>0.8.12</version>
                 <executions>
                     <execution>
-                        <id>prepare-agent</id>
+                        <id>prepare-unit-tests</id>
+                        <phase>initialize</phase>
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
                     </execution>
+
+                    <!-- prepare agent before integration tests -->
                     <execution>
-                        <id>report</id>
+                        <id>prepare-agent</id>
                         <goals>
-                            <goal>report</goal>
+                            <goal>prepare-agent</goal>
                         </goals>
+                        <phase>pre-integration-test</phase>
+                        <configuration>
+                            <propertyName>itCoverageAgent</propertyName>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -128,6 +152,23 @@
             <groupId>org.jacoco</groupId>
             <artifactId>jacoco-maven-plugin</artifactId>
             <version>0.8.12</version>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>5.10.3</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-java</artifactId>
+            <version>7.18.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-junit-platform-engine</artifactId>
+            <version>7.18.0</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>
