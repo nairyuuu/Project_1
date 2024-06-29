@@ -160,7 +160,7 @@ class ClientHandler implements Runnable {
     private void handleFileDelete(DataInputStream dataInput, DataOutputStream dataOutput) throws IOException {
         String userId = dataInput.readUTF();
         String fileName = dataInput.readUTF();
-        File file = new File(Config.UPLOAD_DIR + "/" + userId, fileName);
+        File file = new File(Config.UPLOAD_DIR + userId, fileName);
 
         if (file.exists()) {
             if (file.delete()) {
@@ -175,7 +175,7 @@ class ClientHandler implements Runnable {
     private void handleFileDownload(DataInputStream dataInput, DataOutputStream dataOutput) throws IOException {
         String userId = dataInput.readUTF();
         String fileName = dataInput.readUTF();
-        File file = new File(Config.UPLOAD_DIR + "/" + userId, fileName);
+        File file = new File(Config.UPLOAD_DIR + userId, fileName);
 
         if (file.exists()) {
             dataOutput.writeUTF("FOUND");
@@ -205,7 +205,7 @@ class ClientHandler implements Runnable {
         String fileName = dataInput.readUTF();
         String privateKey = dataInput.readUTF();
 
-        File file = new File(Config.UPLOAD_DIR + userId + "/" + fileName);
+        File file = new File(Config.UPLOAD_DIR + userId, fileName);
         if (!file.exists()) {
             dataOutput.writeUTF("File not found");
             return;
@@ -230,7 +230,7 @@ class ClientHandler implements Runnable {
         String encryptedFileName = dataInput.readUTF();
         String privateKey = dataInput.readUTF();
 
-        File encryptedFile = new File(Config.UPLOAD_DIR + userId + "/" + encryptedFileName);
+        File encryptedFile = new File(Config.UPLOAD_DIR + userId, encryptedFileName);
         if (!encryptedFile.exists()) {
             dataOutput.writeUTF("File not found");
             return;
@@ -238,7 +238,7 @@ class ClientHandler implements Runnable {
 
         SecretKey secretKey = getKey(privateKey);
 
-        File decryptedFile = new File(Config.UPLOAD_DIR + userId + "/" + encryptedFileName.substring(0, encryptedFileName.length() - 4));
+        File decryptedFile = new File(Config.UPLOAD_DIR + userId, encryptedFileName.substring(0, encryptedFileName.length() - 4));
         String response = decryptFile(encryptedFile, decryptedFile, secretKey);
 
         if (response.equals("File decrypted successfully") && encryptedFile.delete()) {
