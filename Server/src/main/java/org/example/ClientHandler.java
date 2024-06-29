@@ -58,6 +58,9 @@ class ClientHandler implements Runnable {
                 case "DECRYPT":
                     handleFileDecrypt(dataInput, dataOutput);
                     break;
+                default:
+                    Logger.getLogger("Received unrecognized command: " + command);
+                    break;
             }
 
         } catch (IOException e) {
