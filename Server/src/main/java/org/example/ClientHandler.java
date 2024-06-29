@@ -3,12 +3,14 @@ package org.example;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
+import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
+import java.security.SecureRandom;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.logging.Logger;
@@ -16,6 +18,8 @@ import java.util.logging.Logger;
 
 class ClientHandler implements Runnable {
     private final Socket socket;
+    private static final int GCM_IV_LENGTH = 12;
+    private static final int GCM_TAG_LENGTH = 16;
 
     public ClientHandler(Socket socket) {
         this.socket = socket;
@@ -187,11 +191,12 @@ class ClientHandler implements Runnable {
     }
     private SecretKey getKey(String privateKey) throws Exception {
         byte[] key = (privateKey).getBytes(StandardCharsets.UTF_8);
-        MessageDigest sha = MessageDigest.getInstance("SHA-512");
+        MessageDigest sha = MessageDigest.getInstance("SHA-256");
         key = sha.digest(key);
-        key = Arrays.copyOf(key, 16);
+        key = Arrays.copyOf(key, 16); // Use first 128 bit
         return new SecretKeySpec(key, "AES");
     }
+
     private void handleFileEncrypt(DataInputStream dataInput, DataOutputStream dataOutput) throws Exception {
         String userId = dataInput.readUTF();
         String fileName = dataInput.readUTF();
@@ -203,9 +208,8 @@ class ClientHandler implements Runnable {
             return;
         }
 
-        // Generate a key from the password
         SecretKey secretKey = getKey(privateKey);
-        // Encrypt the file
+
         File encryptedFile = new File("uploads/" + userId + "/" + fileName + ".enc");
         String response = encryptFile(file, encryptedFile, secretKey);
 
@@ -231,7 +235,6 @@ class ClientHandler implements Runnable {
 
         SecretKey secretKey = getKey(privateKey);
 
-        // Decrypt the file
         File decryptedFile = new File("uploads/" + userId + "/" + encryptedFileName.substring(0, encryptedFileName.length() - 4));
         String response = decryptFile(encryptedFile, decryptedFile, secretKey);
 
@@ -243,12 +246,19 @@ class ClientHandler implements Runnable {
             dataOutput.writeUTF(response);
         }
     }
+
     private String encryptFile(File file, File encryptedFile, SecretKey secretKey) {
         try (FileInputStream fis = new FileInputStream(file);
              FileOutputStream fos = new FileOutputStream(encryptedFile)) {
 
-            Cipher cipher = Cipher.getInstance("AES");
-            cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+            Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
+            byte[] iv = new byte[GCM_IV_LENGTH];
+            SecureRandom random = new SecureRandom();
+            random.nextBytes(iv);
+            GCMParameterSpec parameterSpec = new GCMParameterSpec(GCM_TAG_LENGTH * 8, iv);
+
+            cipher.init(Cipher.ENCRYPT_MODE, secretKey, parameterSpec);
+            fos.write(iv); // Write IV to the beginning of the encrypted file
 
             byte[] inputBuffer = new byte[4096];
             int bytesRead;
@@ -271,14 +281,22 @@ class ClientHandler implements Runnable {
         }
         return "File encrypted successfully";
     }
+
     private String decryptFile(File encryptedFile, File decryptedFile, SecretKey secretKey) {
         boolean deleteDecryptedFile = false;
 
         try (FileInputStream fis = new FileInputStream(encryptedFile);
              FileOutputStream fos = new FileOutputStream(decryptedFile)) {
 
-            Cipher cipher = Cipher.getInstance("AES");
-            cipher.init(Cipher.DECRYPT_MODE, secretKey);
+            byte[] iv = new byte[GCM_IV_LENGTH];
+            if (fis.read(iv) != iv.length) {
+                throw new Exception("Invalid encrypted file format");
+            }
+
+            Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
+            GCMParameterSpec parameterSpec = new GCMParameterSpec(GCM_TAG_LENGTH * 8, iv);
+
+            cipher.init(Cipher.DECRYPT_MODE, secretKey, parameterSpec);
 
             byte[] inputBuffer = new byte[4096];
             int bytesRead;
@@ -313,9 +331,5 @@ class ClientHandler implements Runnable {
             }
         }
     }
+
 }
-
-
-
-
-
