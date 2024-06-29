@@ -15,6 +15,34 @@ public class FileListing implements Callback<ListView<String>, ListCell<String>>
     @Override
     public ListCell<String> call(ListView<String> listView) {
         return new ListCell<>() {
+            private final HBox hBox = new HBox();
+            private final Label label = new Label();
+            private final Region spacer = new Region();
+            private final Button optionsButton = new Button("Options");
+            private final ContextMenu contextMenu = new ContextMenu();
+            private final MenuItem downloadItem = new MenuItem("Download");
+            private final MenuItem deleteItem = new MenuItem("Delete");
+            private final MenuItem encryptItem = new MenuItem("Encrypt");
+            private final MenuItem decryptItem = new MenuItem("Decrypt");
+
+            {
+                HBox.setHgrow(spacer, Priority.ALWAYS);
+                spacer.setMinWidth(100);
+                hBox.setAlignment(Pos.CENTER_LEFT);
+                optionsButton.setAlignment(Pos.CENTER_RIGHT);
+                optionsButton.getStylesheets().add(Objects.requireNonNull(getClass().getResource("styling/fullPackStyling.css")).toExternalForm());
+                optionsButton.getStyleClass().add("button");
+                optionsButton.setFont(new Font("Segoe UI light", 10));
+
+                contextMenu.getItems().addAll(downloadItem, deleteItem, encryptItem, decryptItem);
+                optionsButton.setOnMouseClicked(event ->
+                        contextMenu.show(optionsButton, event.getScreenX(), event.getScreenY())
+                );
+
+                hBox.getChildren().addAll(label, spacer, optionsButton);
+                setGraphic(hBox);
+            }
+
             @Override
             protected void updateItem(String fileName, boolean empty) {
                 super.updateItem(fileName, empty);
@@ -22,36 +50,11 @@ public class FileListing implements Callback<ListView<String>, ListCell<String>>
                     setText(null);
                     setGraphic(null);
                 } else {
-                    HBox hBox = new HBox();
-                    Label label = new Label(fileName);
-                    Region spacer = new Region();
-                    HBox.setHgrow(spacer, Priority.ALWAYS);
-                    spacer.setMinWidth(100);
-                    Button optionsButton = new Button("Options");
-                    hBox.setAlignment(Pos.CENTER_LEFT);
-
-                    optionsButton.setAlignment(Pos.CENTER_RIGHT);
-                    optionsButton.getStylesheets().add(Objects.requireNonNull(getClass().getResource("styling/fullPackStyling.css")).toExternalForm());
-                    optionsButton.getStyleClass().add("button");
-                    optionsButton.setFont(new Font("Segoe UI light", 10));
-
-
-                    ContextMenu contextMenu = new ContextMenu();
-                    MenuItem downloadItem = new MenuItem("Download");
+                    label.setText(fileName);
                     downloadItem.setOnAction(event -> ((ClientController) getListView().getScene().getUserData()).handleDownloadFile(fileName));
-                    MenuItem deleteItem = new MenuItem("Delete");
                     deleteItem.setOnAction(event -> ((ClientController) getListView().getScene().getUserData()).handleDeleteFile(fileName));
-                    MenuItem encryptItem = new MenuItem("Encrypt");
                     encryptItem.setOnAction(event -> ((ClientController) getListView().getScene().getUserData()).handleEncryptFile(fileName));
-                    MenuItem decryptItem = new MenuItem("Decrypt");
                     decryptItem.setOnAction(event -> ((ClientController) getListView().getScene().getUserData()).handleDecryptFile(fileName));
-
-                    contextMenu.getItems().addAll(downloadItem, deleteItem, encryptItem, decryptItem);
-                    optionsButton.setOnMouseClicked(event ->
-                            contextMenu.show(optionsButton, event.getScreenX(), event.getScreenY())
-                    );
-
-                    hBox.getChildren().addAll(label, spacer, optionsButton);
                     setGraphic(hBox);
                 }
             }
