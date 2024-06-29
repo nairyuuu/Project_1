@@ -6,7 +6,7 @@ import java.sql.*;
 import java.util.UUID;
 import java.util.logging.Logger;
 
-private class DatabaseUtil {
+class DatabaseUtil {
     private static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(Config.DB_URL, Config.DB_USER, Config.DB_PASSWORD);
     }
