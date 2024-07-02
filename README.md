@@ -27,8 +27,6 @@ A JavaFX server-client file transferring system using TCP Socket
 
 ### Set up Database
 
-**[!] You have to do this if you want to run client on your own**
-
 #### Docker
 - Ensure Docker and Docker Compose are installed on your devices.
 - Move the `docker-compose.yml` to the directory you want to start docker on.
