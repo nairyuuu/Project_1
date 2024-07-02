@@ -44,7 +44,7 @@ docker-compose up -d
     - Login with username and password init in the `docker-compose.yml`
     - Choose database `FileSenderDB` then run the sql init command in the file `databases.sql`
 
-### Configuration Credentials
+### Configure Credentials
 1. Set environmental variables for `DB_PASSWORD`
     - On Windows
     ```sh
