@@ -18,6 +18,10 @@ A JavaFX server-client file transferring system using TCP Socket
 | 20225588  | Nguyễn Minh Tú  |
 
 ## Requirements
+- Docker and Docker compose
+- Java
+- Maven
+- Have some ports open to the internet
 
 ## Setup Instructions
 
@@ -58,6 +62,9 @@ docker-compose up -d
     protected static final String DB_PASSWORD = System.getenv("DB_PASSWORD");
     ```
 - Replace `your-username` and `your-password` with the value you initialize in your `docker-comse.yml`
+
+### Configure client and server
+- Update the Config.java file in the source code folder to your IP and port
 
 ### Running the Application
 
