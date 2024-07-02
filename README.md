@@ -52,7 +52,7 @@ docker-compose up -d
     ```
     - On Linux/MacOS
     ```sh
-    set X DB_PASSWORD `your-password`
+    export DB_PASSWORD=`your-password`
     ```
     Restart your device after this step for the change to take effect
 
