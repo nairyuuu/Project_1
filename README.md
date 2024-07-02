@@ -11,7 +11,7 @@
 ## Description
 A JavaFX server-client file transferring system using TCP Socket
 
-## Contributor
+## Contributors
 | Student ID  | Student Name |
 | ------------- | ------------- |
 | 20225577 | Lê Trần Long  |
