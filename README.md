@@ -2,27 +2,22 @@
 
 ## Table of Contents
 1. [Description](#description)
-2. [Requirements](#requirements)
-3. [Technology](#technology)
+2. [Contributors](#contributors)
+3. [Requirements](#requirements)
 4. [Setup Instructions](#setup-instructions)
     - [Set up Database](#set-up-database)
     - [Running the Application](#running-the-application)
-5. [Screenshots](#screenshots)
-6. [Contributors](#contributors)
-7. [Troubleshooting](#troubleshooting)
 
 ## Description
 A JavaFX server-client file transferring system using TCP Socket
 
-## Requirements
-Please refer to the [Requirement](Requirement.MD) document.
+## Contributor
+| Student ID  | Student Name |
+| ------------- | ------------- |
+| 20225577 | Lê Trần Long  |
+| 20225588  | Nguyễn Minh Tú  |
 
-## Technology
-- **Language**: `Java`
-- **GUI**: `JavaFX`
-- **Database**: `Docker` + `MySQL`
-- **Build Tool**: `Maven`
-- **Public Localhost Port**: `Ngrok`
+## Requirements
 
 ## Setup Instructions
 
@@ -90,12 +85,3 @@ docker-compose up -d
 .\Client\run.sh
 ```
 
-## Screenshot
-
-## Contributor
-| Student ID  | Student Name |
-| ------------- | ------------- |
-| 20225577 | Lê Trần Long  |
-| 20225588  | Nguyễn Minh Tú  |
-
-## Troubleshooting
